@@ -1,0 +1,290 @@
+
+
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+
+
+<canvas id="tuval" width="400" height="400" style="border:1px solid #000; border-radius: 200px">
+
+Tarayıcınız HTML5 i Desteklemiyor!
+
+</canvas>
+
+
+
+<script type="text/javascript">
+
+
+
+var c = document.getElementById("tuval");
+
+var g = c.getContext("2d");
+
+
+
+// Dereceyi radyana çeviren fonksiyon.
+
+function degToRad(val)
+
+{
+
+ // 1 derece = Pi / 180 radyandır.
+
+ return val * (Math.PI / 180); 
+
+}
+
+
+
+var x = c.width > c.height ? c.height : c.width; // Genişlik - Yükseklik Sabitleme
+
+
+
+// Merkez nokta (a, b)
+
+var a = x / 2;
+
+var b = x / 2;
+
+
+
+// Merkezi belirt
+
+g.translate(a, b);
+
+
+
+// Yuvarlak çizgi kenarları
+
+g.lineCap = "round"; 
+
+
+
+/*********** Saat Dekoru **********/
+
+
+
+g.lineWidth = x * 0.0075;
+
+
+
+for (i = 0; i < 60; i++)
+
+{
+
+ g.beginPath();
+
+ 
+
+ g.moveTo(0, -x * 0.45);
+
+ g.lineTo(0, i % 5 == 0 ? -x * 0.4 : -x * 0.425);
+
+ g.stroke();
+
+
+
+ g.rotate(degToRad(6));
+
+}
+
+
+
+/********* Göstergeleri Çizen Fonksiyon **********/
+
+
+
+function saat()
+
+{
+
+ // Zamanı öğren
+
+ var t = new Date();
+
+
+
+ // Saniye, dakika ve saatin radyan türünden açılarını hesapla
+
+ var sn = degToRad(6 * t.getSeconds());
+
+ var dk = degToRad(6 * t.getMinutes() + t.getSeconds() / 10);
+
+ var sa = degToRad(30 * t.getHours() + t.getMinutes() / 2);
+
+ 
+
+ // Canvas boyutunu x değişkenine aktar
+
+ x = c.width > c.height ? c.height : c.width;
+
+ 
+
+ // Göstergeleri ekrandan temizle
+
+ g.fillStyle = "#FFF";
+
+ 
+
+ g.moveTo(0, 0);
+
+ 
+
+ g.arc(0, 0, x * 0.4, 0, 2 * Math.PI, true);
+
+ 
+
+ g.fill();
+
+ 
+
+ // Tuvali saniye açısı kadar çevir
+
+ g.rotate(sn);
+
+ 
+
+ // Saniye göstergesi kalınlığını ayarla
+
+ g.lineWidth = x * 0.0075;
+
+ 
+
+ //Çizime başla
+
+ g.beginPath();
+
+ 
+
+ // Saniye göstergesini çiz.
+
+ g.moveTo(0, 0);
+
+ g.lineTo(0, -x * 0.375);
+
+ g.stroke();
+
+ 
+
+ // Tuvali normale döndür
+
+ g.rotate(-sn);
+
+ 
+
+ // Yelkovanın (dakika) kalınlığını ayarla
+
+ g.lineWidth = x * 0.01;
+
+ 
+
+ // Çizime başla
+
+ g.beginPath();
+
+ 
+
+ // Tuvali dakika açısı kadar döndür.
+
+ g.rotate(dk);
+
+ 
+
+ // Yelkovanı (dakika) çiz.
+
+ g.moveTo(0, 0);
+
+ g.lineTo(0, -x * 0.325);
+
+ g.stroke();
+
+
+
+ // Tuvali normale döndür.
+
+ g.rotate(-dk);
+
+ 
+
+ // Akrebin (saat) kalınlığını ayarla
+
+ g.lineWidth = x * 0.02;
+
+ 
+
+ // Çizime başla
+
+ g.beginPath();
+
+ 
+
+ // Tuvali saat açısı kadar döndür
+
+ g.rotate(sa);
+
+ 
+
+ // Akrebi (saat) çiz
+
+ g.moveTo(0, 0);
+
+ g.lineTo(0, -x * 0.275);
+
+ g.stroke();
+
+ 
+
+ // Tuvali normale döndür
+
+ g.rotate(-sa);
+
+ 
+
+ // Dolgu rengini ayarla
+
+ g.fillStyle = "rgb(30,30,30)";
+
+ 
+
+ // Saat camının tam ortasına yarıçapı 10 olan bir daire çiz ve içini doldur
+
+ g.moveTo(0, 0);
+
+ g.arc(0, 0, 10, 0, 2 * Math.PI, true);
+
+ g.fill();
+
+ 
+
+ // Merkezi normale döndür.
+
+ g.translate(0, 0);
+
+ 
+
+ // Bu fonksiyonu saniyede bir tekrarla.
+
+ setTimeout("saat()", 1000);
+
+}
+
+
+
+// Sayfa yüklendiği zaman saat fonksiyonunu çalıştır.
+
+window.onload = saat;
+
+</script>
+
+
+
+</body>
+
+</html>
